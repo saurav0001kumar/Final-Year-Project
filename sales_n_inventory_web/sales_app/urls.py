@@ -11,5 +11,6 @@ urlpatterns = [
     path('reset/', views.reset),
     path('postReset/', views.postReset),
     path('about/', views.aboutUs),
-    path('newBill/', views.newBill)
+    path('newBill/', views.newBill),
+    path('inStock/', views.in_Stock)
 ]

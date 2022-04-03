@@ -1,7 +1,9 @@
+from turtle import heading
 from django.shortcuts import render
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore, auth
+# from firebase_admin import db
 import pyrebase
 
 #Your web app's Firebase configuration
@@ -18,10 +20,9 @@ firebaseConfig = {
 }
 
 # Use a service account (path of file inside _init_ folder)
-# cred = credentials.Certificate('C:/Users/SK/Desktop/Project/sales_n_inventory_web/_init_sdk/sales-n-inventory-system-ssvk-firebase-adminsdk-ndio1-b8dd43f87f.json')
-# firebase_admin.initialize_app(cred)
-#
-# db = firestore.client()
+cred = credentials.Certificate('C:/Users/SK/Documents/GitHub/Final-Year-Project/sales_n_inventory_web/_init_sdk/sales-n-inventory-system-ssvk-firebase-adminsdk-ndio1-b8dd43f87f.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 #---------------ends here->
 
 # Create your views here.
@@ -30,7 +31,6 @@ firebaseConfig = {
 # Initialising database,auth and firebase for further use
 firebase=pyrebase.initialize_app(firebaseConfig)
 authe = firebase.auth()
-database=firebase.database()
 
 def index(request):
     return render(request,"Index.html",{'user':authe.current_user})
@@ -108,9 +108,20 @@ def newBill(request):
   else:
     return render(request,"newBill.html",{'user':authe.current_user})
 
+def in_Stock(request):
+  if authe.current_user==None:
+    return render(request,"Login.html",{'user':authe.current_user})
+  else:
+    data=getInStock()
+    l=len(data)
+    return render(request,"in_stock.html",{'user':authe.current_user, 'data':data,'length':l})
+
 
 # Firebase FireStore Related ----------------------------->
-
-
-
-
+def getInStock():
+  collections = db.collection('inventory_db').document(authe.current_user['email']).collection('products').stream()
+  data=[]
+  for doc in collections:
+    d=doc.to_dict()
+    data.append(dict(d))
+  return(data)
