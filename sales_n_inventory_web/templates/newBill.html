@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Dashboard</title>
+
+    <style>
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 30%;
+        }
+
+        /* specify background image url below inside url() tag: */
+
+        body {
+            background-image: url();
+        }
+
+        button {
+            background-color: rgba(7, 179, 185, 0.753);
+            color: white;
+            width: 90px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-shadow: 1px 1px 15px #a3f5ef;
+        }
+    </style>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css\dashboard\card.css'%}">
+
+</head>
+
+<body>
+    {% include "navbar.html" %}
+    <br><br><br><br>
+    <center>
+        <h1>New BILL</h1>
+        <br>
+
+    </center>
+
+</body>
+
+</html>

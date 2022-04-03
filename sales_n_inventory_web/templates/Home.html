@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,6 +32,9 @@
             text-shadow: 1px 1px 15px #a3f5ef;
         }
     </style>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css\dashboard\card.css'%}">
+
 </head>
 
 <body>
@@ -39,7 +43,55 @@
     <center>
         <h1>Welcome to Sales Dashboard !</h1>
         <br>
-        <p></p>
+
+        <table>
+
+            <tr>
+                <td>
+                    <a href="/newBill">
+                        <div class="card">
+                            <br>
+                            <center><img src="{% static 'images/dashboard/add.png'%}" alt="" style="width:50%">
+                                <div class="container">
+                                    <h3><b>Generate New Bill</b></h3>
+                                </div>
+                            </center>
+                        </div>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="">
+                        <div class="card">
+                            <br>
+                            <center><img src="{% static 'images/dashboard/stocks.png'%}" alt="" style="width:45%">
+                                <div class="container">
+                                    <h3><b>View In-Stock Items</b></h3>
+                                </div>
+                            </center>
+                        </div>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="">
+                        <div class="card">
+                            <br>
+                            <center><img src="{% static 'images/dashboard/view.jpg'%}" alt="" style="width:50%">
+                                <div class="container">
+                                    <h3><b>View Previous Bills</b></h3>
+                                </div>
+                            </center>
+                        </div>
+                    </a>
+                </td>
+
+
+    </center>
+    </tr>
+
+    </table>
+
     </center>
 
 </body>

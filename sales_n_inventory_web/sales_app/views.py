@@ -61,6 +61,7 @@ def logout(request):
     try:
         del request.session['uid']
         authe.current_user=None
+        print("logged out success")
     except:
         pass
     return render(request,"Login.html",{'user':authe.current_user})
@@ -97,6 +98,15 @@ def postReset(request):
 
 def aboutUs(request):
   return render(request, "aboutUs.html", {'user':authe.current_user})
+
+
+# Sales Dashboard ---------------------------------------->
+
+def newBill(request):
+  if authe.current_user==None:
+    return render(request,"Login.html",{'user':authe.current_user})
+  else:
+    return render(request,"newBill.html",{'user':authe.current_user})
 
 
 # Firebase FireStore Related ----------------------------->
