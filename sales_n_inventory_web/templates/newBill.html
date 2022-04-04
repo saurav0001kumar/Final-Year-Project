@@ -22,6 +22,15 @@
             border-radius: 10px;
         }
 
+        .proceed_btn {
+            background-color: rgba(0, 48, 204, 0.848);
+            color: white;
+            width: 250;
+            height: 250;
+            border-radius: 50px;
+            font-size: larger;
+        }
+
         h1 {
             text-shadow: 1px 1px 15px #a3f5ef;
         }
@@ -41,6 +50,19 @@
             position: relative;
             align-content: space-around;
         }
+
+        table {
+            background-color: #dcfdfb;
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+        }
+
+        #total {
+            color: darkred;
+        }
     </style>
 
     <link rel="stylesheet" type="text/css" href="{% static 'css\dashboard\card.css'%}">
@@ -59,15 +81,15 @@
         <div id="list">
             <select name="items" id="items">
                 {% for i in data %}
-                <option value="{{ i.item_name }}">{{ i.item_name }}</option>
+                <option value="{{ i }}" id="{{ i.item_name }}">{{ i.item_name }}</option>
                 {% endfor %}
             </select>
-            <button>Add Item</button>
+            <button id="add" onclick="addItem()">Add Item</button>
         </div>
 
         <br>
 
-        <table border="5" id="billing">
+        <table border="5" id="bill">
             <tr>
                 <th>&nbsp;&nbsp; S.No. &nbsp;&nbsp;</th>
                 <th>&nbsp;&nbsp; Item Name &nbsp;&nbsp;</th>
@@ -76,22 +98,138 @@
                 <th>&nbsp;&nbsp; Quantity &nbsp;&nbsp;</th>
                 <th>&nbsp;&nbsp; Amount (INR) &nbsp;&nbsp;</th>
             </tr>
+
+
         </table>
 
-        <p id="a">
-        </p>
-
+        <br>
+        <h4 id="total"></h4>
+        <br>
+        <input type="submit" value="Print Bill" onclick="window.print()">
+        <br><br>
+        <input type="submit" value=" Proceed for Payment " onclick="" class="proceed_btn">
+        <br><br>
 
 
     </center>
 
     <script>
+
+        sno = 1;
+        function addItem() {
+
+            e = document.getElementById('items');
+
+            //formatting for json string
+            str1 = String(e.value);
+            str = str1.split("\'").join("\"");
+            splitted = str.split(",");
+            newStrArr = [];
+            for (let k = 0; k < splitted.length; k++) {
+                if (!splitted[k].includes("date_modified"))
+                    newStrArr.push(splitted[k]);
+            }
+
+            finalStrArr = []
+
+            for (let k = 0; k < newStrArr.length; k++) {
+                if (newStrArr[k].includes("\""))
+                    finalStrArr.push(newStrArr[k]);
+            }
+
+            str = finalStrArr.join(" , ");
+
+            //parsing str to json
+            const data = JSON.parse(str);
+            optionId = data.item_name;
+
+            sel = document.getElementById(optionId);
+
+
+            tab = document.getElementById('bill');
+
+            row = document.createElement('tr');
+            tab.appendChild(row);
+
+            col1 = document.createElement('td');
+            col2 = document.createElement('td');
+            col3 = document.createElement('td');
+            col4 = document.createElement('td');
+            col5 = document.createElement('td');
+            col6 = document.createElement('td');
+
+
+            txt2 = document.createElement('input');
+            txt2.setAttribute('type', 'text');
+            txt2.setAttribute('readonly', "");
+            col2.appendChild(txt2);
+
+            txt3 = document.createElement('input');
+            txt3.setAttribute('type', 'text');
+            txt3.setAttribute('readonly', "");
+            col3.appendChild(txt3);
+
+            txt4 = document.createElement('input');
+            txt4.setAttribute('type', 'text');
+            txt4.setAttribute('readonly', "");
+            col4.appendChild(txt4);
+
+            txt5 = document.createElement('input');
+            txt5.setAttribute('type', 'text');
+            txt5.setAttribute('readonly', "");
+            txt5.setAttribute('onkeypress', 'onKeyPress()');
+            col5.appendChild(txt5);
+
+            txt6 = document.createElement('input');
+            txt6.setAttribute('type', 'text');
+            txt6.setAttribute('readonly', "");
+            txt6.setAttribute('class', "amt");
+            col6.appendChild(txt6);
+
+
+            col1.textContent = sno;
+            txt2.value = data.item_name;
+            txt3.value = data.brand;
+            txt4.value = data.price_per_item;
+            txt5.value = "1";
+            txt6.value = data.price_per_item * Number(txt5.value);
+
+            row.appendChild(col1);
+            row.appendChild(col2);
+            row.appendChild(col3);
+            row.appendChild(col4);
+            row.appendChild(col5);
+            row.appendChild(col6);
+
+
+            //total amount calculation
+            amt_e = document.getElementsByClassName("amt");
+            tot_amt = 0;
+            for (let k = 0; k < amt_e.length; k++) {
+                tot_amt += Number(amt_e[k].value);
+            }
+
+            total_e = document.getElementById("total");
+            total_e.innerHTML = "Total Bill Amount: ₹ " + tot_amt;
+
+
+            sno++;
+        }
+
+        //function onkeypress
+        function onKeyPress() {
+
+        }
+
+
+
         n = new Date();
         y = n.getFullYear();
         m = n.getMonth() + 1;
         d = n.getDate();
-        document.getElementById("date").innerHTML = "Billing Date: " + m + "-" + d + "-" + y;
-        document.getElementById("a").innerHTML = "{{ data.0.item_name }}";
+        document.getElementById("date").innerHTML = "*Billing Date: " + m + "-" + d + "-" + y;
+
+
     </script>
 
 </body>
