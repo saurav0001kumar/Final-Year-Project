@@ -13,12 +13,6 @@
             width: 30%;
         }
 
-        /* specify background image url below inside url() tag: */
-
-        body {
-            background-image: url();
-        }
-
         button {
             background-color: rgba(7, 179, 185, 0.753);
             color: white;
@@ -31,20 +25,74 @@
         h1 {
             text-shadow: 1px 1px 15px #a3f5ef;
         }
+
+        #date {
+            color: red;
+        }
+
+        h6 {
+            position: absolute;
+            align-content: center;
+            margin-left: 10%;
+        }
+
+        #list {
+            margin-left: 70%;
+            position: relative;
+            align-content: space-around;
+        }
     </style>
 
-<link rel="stylesheet" type="text/css" href="{% static 'css\dashboard\card.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css\dashboard\card.css'%}">
 
 </head>
 
 <body>
     {% include "navbar.html" %}
+
     <br><br><br><br>
     <center>
-        <h1>New BILL</h1>
+        <h1>Generate New Bill</h1>
+        <br>
+        <h6 id="date"></h6>
+
+        <div id="list">
+            <select name="items" id="items">
+                {% for i in data %}
+                <option value="{{ i.item_name }}">{{ i.item_name }}</option>
+                {% endfor %}
+            </select>
+            <button>Add Item</button>
+        </div>
+
         <br>
 
+        <table border="5" id="billing">
+            <tr>
+                <th>&nbsp;&nbsp; S.No. &nbsp;&nbsp;</th>
+                <th>&nbsp;&nbsp; Item Name &nbsp;&nbsp;</th>
+                <th>&nbsp;&nbsp; Brand &nbsp;&nbsp;</th>
+                <th>&nbsp;&nbsp; Rate (INR) &nbsp;&nbsp;</th>
+                <th>&nbsp;&nbsp; Quantity &nbsp;&nbsp;</th>
+                <th>&nbsp;&nbsp; Amount (INR) &nbsp;&nbsp;</th>
+            </tr>
+        </table>
+
+        <p id="a">
+        </p>
+
+
+
     </center>
+
+    <script>
+        n = new Date();
+        y = n.getFullYear();
+        m = n.getMonth() + 1;
+        d = n.getDate();
+        document.getElementById("date").innerHTML = "Billing Date: " + m + "-" + d + "-" + y;
+        document.getElementById("a").innerHTML = "{{ data.0.item_name }}";
+    </script>
 
 </body>
 

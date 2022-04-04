@@ -29,13 +29,25 @@
         }
 
         h1 {
-            text-shadow: 1px 1px 15px #a3f5ef;
+            text-shadow: 10px 10px 15px #0c35ed;
             color: white;
         }
 
         table {
             background-color: #dcfdfb;
             text-align: center;
+        }
+
+        th{
+            background-color: cornsilk;
+        }
+
+        tr:nth-child(odd) {
+        background-color: #e0dfdf;
+    }
+
+        #len{
+            color:rgb(0, 255, 255);
         }
     </style>
 
@@ -48,7 +60,7 @@
     <br><br><br><br>
     <center>
         <h1>In-Stock Items</h1>
-        <br>
+        <h1 id="len">{{ length }}</h1>
         <br>
         <table border="5">
             <tr>

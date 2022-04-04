@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,7 +45,7 @@
 
         body::after {
             content: "";
-            background: url(http://briot.in/wp-content/uploads/2020/03/Godfrey-JE-Blog-Mrkt-P1.gif);
+            background: url("{% static 'images/homepage.gif'%}");
             border: 0.9;
             top: 0;
             left: 0;

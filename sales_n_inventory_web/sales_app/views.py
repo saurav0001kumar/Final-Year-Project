@@ -106,7 +106,9 @@ def newBill(request):
   if authe.current_user==None:
     return render(request,"Login.html",{'user':authe.current_user})
   else:
-    return render(request,"newBill.html",{'user':authe.current_user})
+    data=getInStock()
+    l=len(data)
+    return render(request,"newBill.html",{'user':authe.current_user, 'data':data,'length':l})
 
 def in_Stock(request):
   if authe.current_user==None:
@@ -123,5 +125,6 @@ def getInStock():
   data=[]
   for doc in collections:
     d=doc.to_dict()
-    data.append(dict(d))
+    if d['quantity']>0:
+      data.append(dict(d))
   return(data)
