@@ -87,30 +87,31 @@
             <button id="add" onclick="addItem()">Add Item</button>
         </div>
 
-        <br>
-
-        <table border="5" id="bill">
-            <tr>
-                <th>&nbsp;&nbsp; S.No. &nbsp;&nbsp;</th>
-                <th>&nbsp;&nbsp; Item Name &nbsp;&nbsp;</th>
-                <th>&nbsp;&nbsp; Brand &nbsp;&nbsp;</th>
-                <th>&nbsp;&nbsp; Rate (INR) &nbsp;&nbsp;</th>
-                <th>&nbsp;&nbsp; Quantity &nbsp;&nbsp;</th>
-                <th>&nbsp;&nbsp; Amount (INR) &nbsp;&nbsp;</th>
-            </tr>
-
-
-        </table>
-
-        <br>
-        <h4 id="total"></h4>
-        <br>
         <input type="submit" value="Print Bill" onclick="window.print()">
-        <br><br>
-        <input type="submit" value=" Proceed for Payment " onclick="" class="proceed_btn">
-        <br><br>
+        <br>
+        <br>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Enter customer's mobile" name="mobile" required>
+            <br>
+            <br>
+            <table border="5" id="bill">
+                <tr>
+                    <th>&nbsp;&nbsp; S.No. &nbsp;&nbsp;</th>
+                    <th>&nbsp;&nbsp; Item Name &nbsp;&nbsp;</th>
+                    <th>&nbsp;&nbsp; Brand &nbsp;&nbsp;</th>
+                    <th>&nbsp;&nbsp; Rate (INR) &nbsp;&nbsp;</th>
+                    <th>&nbsp;&nbsp; Quantity &nbsp;&nbsp;</th>
+                    <th>&nbsp;&nbsp; Amount (INR) &nbsp;&nbsp;</th>
+                </tr>
+            </table>
+            <br>
+            <h4 id="total"></h4>
+            <br><br>
+            <input type="submit" value=" Proceed for Payment " onclick="" class="proceed_btn">
+            <br><br>
 
-
+        </form>
     </center>
 
     <script>
@@ -162,27 +163,32 @@
             txt2 = document.createElement('input');
             txt2.setAttribute('type', 'text');
             txt2.setAttribute('readonly', "");
+            txt2.setAttribute('name', "item_name" + sno);
             col2.appendChild(txt2);
 
             txt3 = document.createElement('input');
             txt3.setAttribute('type', 'text');
             txt3.setAttribute('readonly', "");
+            txt3.setAttribute('name', "brand" + sno);
             col3.appendChild(txt3);
 
             txt4 = document.createElement('input');
             txt4.setAttribute('type', 'text');
             txt4.setAttribute('readonly', "");
+            txt4.setAttribute('name', "price_per_item" + sno);
             col4.appendChild(txt4);
 
             txt5 = document.createElement('input');
             txt5.setAttribute('type', 'text');
             txt5.setAttribute('readonly', "");
+            txt5.setAttribute('name', "quantity" + sno);
             txt5.setAttribute('onkeypress', 'onKeyPress()');
             col5.appendChild(txt5);
 
             txt6 = document.createElement('input');
             txt6.setAttribute('type', 'text');
             txt6.setAttribute('readonly', "");
+            txt6.setAttribute('name', "amount" + sno);
             txt6.setAttribute('class', "amt");
             col6.appendChild(txt6);
 

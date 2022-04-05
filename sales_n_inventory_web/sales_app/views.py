@@ -1,3 +1,4 @@
+import datetime
 from turtle import heading
 from django.shortcuts import render
 import firebase_admin
@@ -106,9 +107,55 @@ def newBill(request):
   if authe.current_user==None:
     return render(request,"Login.html",{'user':authe.current_user})
   else:
-    data=getInStock()
-    l=len(data)
-    return render(request,"newBill.html",{'user':authe.current_user, 'data':data,'length':l})
+    if request.method == 'POST':
+      print("\n\n\n\n\nPOST method\n\n\n\n\n\n")
+      print(request.POST)
+      dicti=request.POST
+      length=(len(dicti)-2) // 5
+      item_name=[]
+      brand=[]
+      price_per_item=[]
+      quantity=[]
+      amount=[]
+      print(length)
+
+      for i in range(length):
+        idx=str(i+1)
+
+        item_name.append(request.POST['item_name'+idx])
+        brand.append(request.POST['brand'+idx])
+        price_per_item.append(request.POST['price_per_item'+idx])
+        quantity.append(request.POST['quantity'+idx])
+        amount.append(request.POST['amount'+idx])
+
+      customer_mobile=request.POST["mobile"]
+
+      print(item_name)
+      bill_total=0
+      for i in range(len(amount)):
+        bill_total+=int(amount[i])
+
+      dataFromForm = {
+        'bill_date': datetime.datetime.now(tz=datetime.timezone.utc),
+        'items': item_name,
+        'brands': brand,
+        'rates': price_per_item,
+        'quantities': quantity,
+        'amounts': amount,
+        'total_paid': bill_total,
+        'customer_mobile': customer_mobile
+        }
+
+
+      # send data to sales_db     
+
+      db.collection(u'sales_db').document(authe.current_user['email']).collection('sales_info').add(dataFromForm)
+
+      return render(request,"payment.html",{'user':authe.current_user})
+    else:
+      data=getInStock()
+      l=len(data)
+      return render(request,"newBill.html",{'user':authe.current_user, 'data':data,'length':l})
 
 def in_Stock(request):
   if authe.current_user==None:
@@ -128,3 +175,9 @@ def getInStock():
     if d['quantity']>0:
       data.append(dict(d))
   return(data)
+
+
+# get Data From NewBill page & proceed to payment page ----------------------------->
+
+  
+
