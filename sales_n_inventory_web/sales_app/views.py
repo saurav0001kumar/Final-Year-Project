@@ -1,4 +1,6 @@
 import datetime
+from itertools import product
+from multiprocessing.spawn import old_main_modules
 from turtle import heading
 from django.shortcuts import render
 import firebase_admin
@@ -33,15 +35,27 @@ db = firestore.client()
 firebase=pyrebase.initialize_app(firebaseConfig)
 authe = firebase.auth()
 
+
+
+
+
 def index(request):
     return render(request,"Index.html",{'user':authe.current_user})
  
+
+
+
+
 def signIn(request):
     if authe.current_user==None:
       return render(request,"Login.html",{'user':authe.current_user})
     else:
       return render(request,"Home.html",{'user':authe.current_user})
  
+
+
+
+
 def postsignIn(request):
     if authe.current_user==None:
       email=request.POST.get('email')
@@ -53,23 +67,35 @@ def postsignIn(request):
           message="Invalid Credentials! Please Check your email or password."
           return render(request,"Login.html",{"message":message, 'user':authe.current_user})
       session_id=user['idToken']
-      request.session['uid']=str(session_id)
+      # request.session['uid']=str(session_id)
       return render(request,"Home.html",{"email":email, 'user':authe.current_user})
     else:
       return render(request,"Home.html",{'user':authe.current_user})
- 
+
+
+
+
+
 def logout(request):
     try:
-        del request.session['uid']
+        # del request.session['uid']
         authe.current_user=None
         print("logged out success")
     except:
         pass
     return render(request,"Login.html",{'user':authe.current_user})
- 
+
+
+
+
+
 def signUp(request):
     return render(request,"Registration.html",{'user':authe.current_user})
- 
+
+
+
+
+
 def postsignUp(request):
      email = request.POST.get('email')
      passs = request.POST.get('pass')
@@ -84,8 +110,16 @@ def postsignUp(request):
         return render(request, "Registration.html",{'user':authe.current_user})
      return render(request,"Login.html",{'user':authe.current_user})
 
+
+
+
+
 def reset(request):
 	return render(request, "Reset.html",{'user':authe.current_user})
+
+
+
+
 
 def postReset(request):
 	email = request.POST.get('email')
@@ -97,8 +131,15 @@ def postReset(request):
 		message = "Something went wrong, Please check the email you provided is registered or not."
 		return render(request, "Reset.html", {"msg":message, 'user':authe.current_user})
 
+
+
+
+
 def aboutUs(request):
   return render(request, "aboutUs.html", {'user':authe.current_user})
+
+
+
 
 
 # Sales Dashboard ---------------------------------------->
@@ -130,7 +171,7 @@ def newBill(request):
 
       customer_mobile=request.POST["mobile"]
 
-      print(item_name)
+      # print(item_name)
       bill_total=0
       for i in range(len(amount)):
         bill_total+=int(amount[i])
@@ -147,15 +188,40 @@ def newBill(request):
         }
 
 
-      # send data to sales_db     
+      # send form data to sales_db     
 
       db.collection(u'sales_db').document(authe.current_user['email']).collection('sales_info').add(dataFromForm)
+
+      # update inventory_db //updating the item quantity after sale -->
+      
+      products_data=getInStock()
+      l=len(products_data)
+      print("**************************************",products_data,l)
+
+      for i in range(length):
+
+        doc = db.collection('inventory_db').document(authe.current_user['email']).collection('products').document(item_name[i]).get()
+        product=doc.to_dict()
+        print(product)
+
+        old_quantity=product.get("quantity")
+        new_quantity=old_quantity-int(quantity[i])
+        print(new_quantity)
+
+        db.collection(u'inventory_db').document(authe.current_user['email']).collection('products').document(item_name[i]).set({
+          u'quantity': new_quantity
+          }, merge=True)      
+
 
       return render(request,"payment.html",{'user':authe.current_user})
     else:
       data=getInStock()
       l=len(data)
       return render(request,"newBill.html",{'user':authe.current_user, 'data':data,'length':l})
+
+
+
+
 
 def in_Stock(request):
   if authe.current_user==None:
@@ -164,6 +230,9 @@ def in_Stock(request):
     data=getInStock()
     l=len(data)
     return render(request,"in_stock.html",{'user':authe.current_user, 'data':data,'length':l})
+
+
+
 
 
 # Firebase FireStore Related ----------------------------->
