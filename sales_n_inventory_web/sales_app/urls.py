@@ -13,5 +13,6 @@ urlpatterns = [
     path('about/', views.aboutUs),
     path('newBill/', views.newBill),
     path('inStock/', views.in_Stock),
-    path('newBill/newBill/', views.newBill)
+    path('newBill/newBill/', views.newBill),
+    path('bills/',views.showPreviousBills)
 ]

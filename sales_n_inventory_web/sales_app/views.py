@@ -177,7 +177,7 @@ def newBill(request):
         bill_total+=int(amount[i])
 
       dataFromForm = {
-        'bill_date': datetime.datetime.now(tz=datetime.timezone.utc),
+        'bill_date': datetime.datetime.now(),
         'items': item_name,
         'brands': brand,
         'rates': price_per_item,
@@ -213,7 +213,7 @@ def newBill(request):
           }, merge=True)      
 
 
-      return render(request,"payment.html",{'user':authe.current_user})
+      return render(request,"payment.html",{'user':authe.current_user, 'tot':bill_total})
     else:
       data=getInStock()
       l=len(data)
@@ -236,6 +236,8 @@ def in_Stock(request):
 
 
 # Firebase FireStore Related ----------------------------->
+
+#To get products in-stock:
 def getInStock():
   collections = db.collection('inventory_db').document(authe.current_user['email']).collection('products').stream()
   data=[]
@@ -246,7 +248,54 @@ def getInStock():
   return(data)
 
 
-# get Data From NewBill page & proceed to payment page ----------------------------->
+#To get previous bills in sales_db:
+def getBills():
+  collections = db.collection('sales_db').document(authe.current_user['email']).collection('sales_info').order_by(
+    u'bill_date', direction=firestore.Query.DESCENDING).stream()
+  data=[]
+  for doc in collections:
+    d=doc.to_dict()
+    data.append(dict(d))
+  return(data)
+
+
+# show Previous Bills ----------------------------->
+
+def showPreviousBills(request):
+  if authe.current_user==None:
+    return render(request,"Login.html",{'user':authe.current_user})
+  else:
+    if request.method == 'POST':
+      bill_index=request.POST['sno']
+      bill_index=int(bill_index)
+
+      data=getBills()
+      bill_info=data[bill_index-1]
+      print(bill_info)
+
+      items=bill_info.get('items')
+      brands=bill_info.get('brands')
+      rates=bill_info.get('rates')
+      quantities=bill_info.get('quantities')
+      amounts=bill_info.get('amounts')
+
+      dataComb=[]
+      for i in range(len(items)):
+        t=[]
+        t.append(items[i])
+        t.append(brands[i])
+        t.append(rates[i])
+        t.append(quantities[i])
+        t.append(amounts[i])
+        dataComb.append(t)
+
+      return render(request,"bill_details.html",{'user':authe.current_user, 'bill_info':bill_info, 'dataComb':dataComb})
+
+    else:  
+      data=getBills()
+      l=len(data)
+      return render(request,"previousBills.html",{'user':authe.current_user, 'data':data,'length':l})
+
 
   
 

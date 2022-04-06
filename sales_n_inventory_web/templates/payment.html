@@ -33,13 +33,16 @@
             border: none;
         }
     </style>
+
+    <!-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'> -->
+
 </head>
 
 <body>
     <center>
         <p>Do not go back or refresh this page.</p>
         <a href="/login">
-            <button id="confirm" onclick="confirmPay()">Confirm Payment</button>
+            <button id="confirm" onclick="confirmPay()"><b>Confirm Payment ₹{{ tot }}</b></button>
         </a>
         <br>
         <br>
@@ -66,10 +69,14 @@
     <script>
 
         function confirmPay() {
+            // Swal.fire("Payment Confirmed!", "", "success");
             alert("Payment Confirmed!");
         }
 
     </script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script> -->
+
 </body>
 
 </html>
